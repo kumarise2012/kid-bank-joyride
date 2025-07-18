@@ -33,6 +33,11 @@ const savingsGoals = [
   { id: 1, title: "New Bike", target: 200, current: 87, emoji: "🚲" },
   { id: 2, title: "Video Game", target: 60, current: 45, emoji: "🎮" },
   { id: 3, title: "Art Supplies", target: 30, current: 28, emoji: "🎨" },
+  { id: 4, title: "New Phone", target: 150, current: 23, emoji: "📱" },
+  { id: 5, title: "Skateboard", target: 80, current: 65, emoji: "🛹" },
+  { id: 6, title: "Books", target: 40, current: 38, emoji: "📚" },
+  { id: 7, title: "Soccer Ball", target: 25, current: 12, emoji: "⚽" },
+  { id: 8, title: "Guitar", target: 300, current: 95, emoji: "🎸" },
 ];
 
 export default function Dashboard({ onLogout }: DashboardProps) {
