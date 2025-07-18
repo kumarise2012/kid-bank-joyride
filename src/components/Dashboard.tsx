@@ -15,8 +15,15 @@ import {
   Settings,
   LogOut,
   DollarSign,
-  Plus
+  Plus,
+  Trophy,
+  Flame,
+  Clock
 } from "lucide-react";
+import { AchievementBadge } from "./gamification/AchievementBadge";
+import { LevelProgress } from "./gamification/LevelProgress";
+import { DailyChallenges } from "./gamification/DailyChallenges";
+import { StreakCounter } from "./gamification/StreakCounter";
 
 interface DashboardProps {
   onLogout: () => void;
@@ -39,6 +46,34 @@ const savingsGoals = [
   { id: 7, title: "Soccer Ball", target: 25, current: 12, emoji: "⚽" },
   { id: 8, title: "Guitar", target: 300, current: 95, emoji: "🎸" },
 ];
+
+const achievements = [
+  { id: "first_save", title: "First Save", description: "Made your first deposit", icon: "🎯", unlocked: true, unlockedAt: "Today" },
+  { id: "piggy_bank", title: "Piggy Pro", description: "Saved $50 total", icon: "🐷", unlocked: true },
+  { id: "goal_getter", title: "Goal Getter", description: "Completed first savings goal", icon: "🏆", unlocked: false },
+  { id: "streak_starter", title: "Streak Star", description: "5-day saving streak", icon: "⭐", unlocked: true },
+  { id: "money_master", title: "Money Master", description: "Saved $100 total", icon: "💰", unlocked: false },
+  { id: "challenge_champ", title: "Challenge Champ", description: "Complete 10 challenges", icon: "🥇", unlocked: false },
+];
+
+const dailyChallenges = [
+  { id: "save_today", title: "Daily Saver", description: "Add money to your account", progress: 1, target: 1, xpReward: 50, completed: true, icon: "💰" },
+  { id: "check_goals", title: "Goal Checker", description: "Review your savings goals", progress: 0, target: 1, xpReward: 25, completed: false, icon: "🎯" },
+  { id: "learn_money", title: "Money Learner", description: "Read a money tip", progress: 2, target: 3, xpReward: 75, completed: false, icon: "📚" },
+];
+
+const playerLevel = {
+  currentLevel: 3,
+  currentXP: 275,
+  xpToNextLevel: 400,
+  totalXP: 1275
+};
+
+const streakData = {
+  currentStreak: 7,
+  bestStreak: 12,
+  lastActivity: "Today"
+};
 
 export default function Dashboard({ onLogout }: DashboardProps) {
   const [activeTab, setActiveTab] = useState("home");
@@ -83,6 +118,23 @@ export default function Dashboard({ onLogout }: DashboardProps) {
               </CardContent>
             </Card>
 
+            {/* Level Progress & Streak */}
+            <div className="grid grid-cols-3 gap-4">
+              <div className="col-span-2">
+                <LevelProgress 
+                  currentLevel={playerLevel.currentLevel}
+                  currentXP={playerLevel.currentXP}
+                  xpToNextLevel={playerLevel.xpToNextLevel}
+                  totalXP={playerLevel.totalXP}
+                />
+              </div>
+              <StreakCounter 
+                currentStreak={streakData.currentStreak}
+                bestStreak={streakData.bestStreak}
+                lastActivity={streakData.lastActivity}
+              />
+            </div>
+
             {/* Quick Actions */}
             <div className="grid grid-cols-2 gap-4">
               <Button variant="success" size="lg" className="h-20 flex-col space-y-1">
@@ -95,32 +147,27 @@ export default function Dashboard({ onLogout }: DashboardProps) {
               </Button>
             </div>
 
-            {/* Savings Goals */}
+            {/* Daily Challenges */}
+            <DailyChallenges challenges={dailyChallenges} />
+
+            {/* Recent Achievements */}
             <Card className="shadow-card">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-primary">
-                  <Target className="h-5 w-5" />
-                  Savings Goals
+                  <Trophy className="h-5 w-5" />
+                  Recent Achievements
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                {savingsGoals.map((goal) => (
-                  <div key={goal.id} className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xl">{goal.emoji}</span>
-                        <span className="font-medium">{goal.title}</span>
-                      </div>
-                      <Badge variant="secondary">
-                        ${goal.current}/${goal.target}
-                      </Badge>
-                    </div>
-                    <Progress 
-                      value={(goal.current / goal.target) * 100} 
-                      className="h-2"
+              <CardContent>
+                <div className="grid grid-cols-3 gap-3">
+                  {achievements.slice(0, 6).map((achievement) => (
+                    <AchievementBadge 
+                      key={achievement.id} 
+                      achievement={achievement} 
+                      size="sm"
                     />
-                  </div>
-                ))}
+                  ))}
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -160,6 +207,64 @@ export default function Dashboard({ onLogout }: DashboardProps) {
                       transaction.type === "deposit" ? "text-success" : "text-accent"
                     }`}>
                       {transaction.type === "deposit" ? "+" : "-"}${transaction.amount}
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        );
+
+      case "goals":
+        return (
+          <div className="space-y-6">
+            {/* All Achievements */}
+            <Card className="shadow-card">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-primary">
+                  <Trophy className="h-5 w-5" />
+                  All Achievements
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-4">
+                  {achievements.map((achievement) => (
+                    <AchievementBadge 
+                      key={achievement.id} 
+                      achievement={achievement} 
+                      size="lg"
+                    />
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Savings Goals */}
+            <Card className="shadow-card">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-primary">
+                  <Target className="h-5 w-5" />
+                  Savings Goals
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {savingsGoals.map((goal) => (
+                  <div key={goal.id} className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">{goal.emoji}</span>
+                        <span className="font-medium">{goal.title}</span>
+                      </div>
+                      <Badge variant="secondary">
+                        ${goal.current}/${goal.target}
+                      </Badge>
+                    </div>
+                    <Progress 
+                      value={(goal.current / goal.target) * 100} 
+                      className="h-2"
+                    />
+                    <div className="text-right text-xs text-muted-foreground">
+                      {((goal.current / goal.target) * 100).toFixed(0)}% complete
                     </div>
                   </div>
                 ))}
