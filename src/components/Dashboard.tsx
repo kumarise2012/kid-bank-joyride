@@ -18,12 +18,14 @@ import {
   Plus,
   Trophy,
   Flame,
-  Clock
+  Clock,
+  Bot
 } from "lucide-react";
 import { AchievementBadge } from "./gamification/AchievementBadge";
 import { LevelProgress } from "./gamification/LevelProgress";
 import { DailyChallenges } from "./gamification/DailyChallenges";
 import { StreakCounter } from "./gamification/StreakCounter";
+import { AIAssistant } from "./ai/AIAssistant";
 
 interface DashboardProps {
   onLogout: () => void;
@@ -273,6 +275,17 @@ export default function Dashboard({ onLogout }: DashboardProps) {
           </div>
         );
 
+      case "ai":
+        return (
+          <div className="space-y-4">
+            <AIAssistant 
+              balance={totalBalance}
+              goals={savingsGoals}
+              transactions={mockTransactions}
+            />
+          </div>
+        );
+
       default:
         return (
           <Card className="shadow-card">
@@ -314,11 +327,12 @@ export default function Dashboard({ onLogout }: DashboardProps) {
 
       {/* Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-sm border-t border-primary/10">
-        <div className="grid grid-cols-4 gap-1 p-2">
+        <div className="grid grid-cols-5 gap-1 p-2">
           {[
             { id: "home", icon: Home, label: "Home" },
             { id: "transactions", icon: History, label: "Activity" },
             { id: "goals", icon: Target, label: "Goals" },
+            { id: "ai", icon: Bot, label: "AI Mentor" },
             { id: "settings", icon: Settings, label: "Settings" },
           ].map((item) => (
             <Button
