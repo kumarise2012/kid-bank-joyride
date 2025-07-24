@@ -26,6 +26,7 @@ import { LevelProgress } from "./gamification/LevelProgress";
 import { DailyChallenges } from "./gamification/DailyChallenges";
 import { StreakCounter } from "./gamification/StreakCounter";
 import { AIAssistant } from "./ai/AIAssistant";
+import { Quiz } from "./quiz/Quiz";
 
 interface DashboardProps {
   onLogout: () => void;
@@ -275,6 +276,16 @@ export default function Dashboard({ onLogout }: DashboardProps) {
           </div>
         );
 
+      case "quiz":
+        return (
+          <div className="space-y-4">
+            <Quiz onQuizComplete={(score, earnedXP) => {
+              // In a real app, you'd update the user's XP here
+              console.log(`Quiz completed! Score: ${score}, XP earned: ${earnedXP}`);
+            }} />
+          </div>
+        );
+
       case "ai":
         return (
           <div className="space-y-4">
@@ -327,11 +338,12 @@ export default function Dashboard({ onLogout }: DashboardProps) {
 
       {/* Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-sm border-t border-primary/10">
-        <div className="grid grid-cols-5 gap-1 p-2">
+        <div className="grid grid-cols-6 gap-1 p-2">
           {[
             { id: "home", icon: Home, label: "Home" },
             { id: "transactions", icon: History, label: "Activity" },
             { id: "goals", icon: Target, label: "Goals" },
+            { id: "quiz", icon: Trophy, label: "Quiz" },
             { id: "ai", icon: Bot, label: "AI Mentor" },
             { id: "settings", icon: Settings, label: "Settings" },
           ].map((item) => (
